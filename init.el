@@ -7,7 +7,7 @@
 ;; init file
 (defun open-init-file()
   (interactive)
-  (find-file "c:/Users/chuan/.emacs.d/init.el"))
+  (find-file "~/.emacs.d/init.el"))
 (global-set-key (kbd "<f12>") 'open-init-file)
 
 ;; eval-buffer
