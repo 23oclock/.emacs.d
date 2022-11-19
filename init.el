@@ -1,101 +1,71 @@
-(setq package-archives '(
-			 ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+			 ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
 			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
 			 ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
-(package-initialize)
 
-;; init file
-(defun open-init-file()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-(global-set-key (kbd "<f12>") 'open-init-file)
+;;; font
+(set-frame-font "等距更纱黑体 SC 16")
+;;; xxxxxxxx
+;;; 你你你你
+(prefer-coding-system 'utf-8)
 
-;; eval-buffer
-(global-set-key (kbd "<f5>") 'eval-buffer)
-
-;; use-package
+;;; use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(require 'use-package)
-
-(require 'use-package-ensure)
+(eval-when-compile (require 'use-package))
 (setq use-package-always-ensure t)
+;; (setq use-package-verbose t)
 
-;; evil
-(use-package evil
-  :config
-  (evil-mode))
-(use-package undo-tree
-  :after evil
-  :diminish
-  :config
-  (evil-set-undo-system 'undo-tree)
-  (global-undo-tree-mode 1))
+;;; config file settings
+(global-set-key (kbd "<f5>") 'eval-buffer)
+(global-set-key (kbd "<f1>") (lambda() (interactive) (find-file (concat user-emacs-directory "init.el"))))
+;; emacs 自动生成的文件放到一个目录中
+(setq custom-file (concat user-emacs-directory "emacs-custom.el"))
+;; 简写 yes 和 no
+(fset 'yes-or-no-p 'y-or-n-p)
+;; 备份文件集中到一个目录
+(setq backup-dir (concat user-emacs-directory "backup"))
+(setq backup-directory-alist `(("." . ,backup-dir)))  ;; 此处反引号和逗号配合使用，表示求出变量的值
 
-;; company
+
+;;; company
 (use-package company
+  :defer 5
   :config
-  (global-company-mode t))
+  (global-company-mode 1))
 
-;; configure frame
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-;; (set-frame-position (selected-frame) 10 10)
-;; (set-frame-size (selected-frame) 80 28)
-(set-frame-font "Sarasa Mono SC 14")
-;; xxxxxxxxxxxxxxxx
-;; 你你你你你你你你
-
-;; ivy
-(use-package counsel
+;;; evil
+(use-package evil
+  :defer 0.5
   :config
-  (ivy-mode 1))
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-;; enable this if you want `swiper' to use it
-;; (setq search-default-mode #'char-fold-to-regexp)
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (evil-mode)
+  (define-key evil-normal-state-map (kbd "<tab>") 'org-cycle))
 
-(use-package amx
-  :ensure t
-  :init (amx-mode))
+;;; ivy
+(use-package ivy
+  :diminish ivy-mode
+  :hook (after-init . ivy-mode)
+  :config
+  (use-package swiper)
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-count-format "(%d/%d) ")
+  :bind
+  ("\C-s" . swiper))
 
-;; ui setting
-(when window-system
-  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
-;; (setq frame-title-format "%b")
-(setq inhibit-startup-message t)
-(menu-bar-mode 0)
-(global-hl-line-mode t)
-(global-display-line-numbers-mode)
-(setq display-line-numbers 'relative)
-(scroll-bar-mode 0)
-(show-paren-mode t)
-(tool-bar-mode 0)
-(tooltip-mode 0)
-(setq visible-bell 0)
-(visual-line-mode t)
-(global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-0") 'text-scale-adjust)
+;;; prescient
+(use-package prescient
+  :after (ivy)
+  :config
+  (use-package ivy-prescient)
+  (use-package company-prescient)
+  (ivy-prescient-mode 1)
+  (company-prescient-mode 1)
+  (setq prescient-save-file (expand-file-name ".cache/prescient" user-emacs-directory))
+  (prescient-persist-mode t))
 
-;; doom theme
+;;; doom theme
 (use-package doom-themes
   :config
   (load-theme 'doom-tomorrow-day t))
@@ -109,71 +79,16 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-height 1)
-  (set-face-attribute 'mode-line nil :height 100)
-  (set-face-attribute 'mode-line-inactive nil :height 100))
+  (setq doom-modeline-icon t
+	doom-modeline-height 1
+	doom-modeline-minor-modes nil))
 
-;; pyim
-(use-package pyim
-  :config
-  (setq default-input-method "pyim"))
-(use-package pyim-basedict
-  :config
-  (pyim-basedict-enable))
-(require 'pyim-cregexp-utils)
-
-;; 如果使用 popup page tooltip, 就需要加载 popup 包。
-(require 'popup nil t)
-(setq pyim-page-tooltip 'popup)
-
-;; 如果使用 pyim-dregcache dcache 后端，就需要加载 pyim-dregcache 包。
-;; (require 'pyim-dregcache)
-;; (setq pyim-dcache-backend 'pyim-dregcache)
-
-;; 显示5个候选词。
-(setq pyim-page-length 5)
-
-;; 金手指设置，可以将光标处的编码，比如：拼音字符串，转换为中文。
-(global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
-
-;; 按 "C-<return>" 将光标前的 regexp 转换为可以搜索中文的 regexp.
-(define-key minibuffer-local-map (kbd "C-<return>") 'pyim-cregexp-convert-at-point)
-
-;; 我使用全拼
-(pyim-default-scheme 'microsoft-shuangpin)
-;;(pyim-default-scheme 'quanpin)
-;; (pyim-default-scheme 'wubi)
-;; (pyim-default-scheme 'cangjie)
-
-;; 我使用云拼音
-(setq pyim-cloudim 'baidu)
-
-;; pyim 探针设置
-;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
-;; 我自己使用的中英文动态切换规则是：
-;; 1. 光标只有在注释里面时，才可以输入中文。
-;; 2. 光标前是汉字字符时，才能输入中文。
-;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
-(setq-default pyim-english-input-switch-functions
-              '(pyim-probe-dynamic-english
-                pyim-probe-isearch-mode
-                ;; pyim-probe-program-mode
-                pyim-probe-org-structure-template))
-(setq-default pyim-punctuation-half-width-function
-              '(pyim-probe-punctuation-line-beginning
-                pyim-probe-punctuation-after-punctuation))
-
-;; 开启代码搜索中文功能（比如拼音，五笔码等）
-(pyim-isearch-mode 1)
-
-;; org mode
+;;; org mode
 (setq org-directory "~/org/")
 (setq org-startup-indented t)
 (setq org-adapt-indentation t)
 (setq org-startup-folded 'content);; 只显示标题
 (setq org-cycle-include-plain-lists 'integrate) ;; 将列表视为heading
-(define-key evil-normal-state-map (kbd "<tab>") 'org-cycle)
 
 (use-package org-superstar
   :after org
@@ -181,74 +96,124 @@
   :config
   (setq org-superstar-special-todo-items t))
 
-(global-set-key (kbd "C-c c") 'org-capture)
-(setq org-default-notes-file "~/org/inbox.org")
-(setq org-capture-templates
-   '(("j" "Journal" entry
-      (file+olp+datetree "journal.org")
-      "* <%<%H:%M:%S>>\n %?")))
-
-;; image from clipboard
-(setq org-image-actual-width (/ (display-pixel-width) 8))
-(setq default-image-directory "c:/Users/chuan/org/images")
-(defun copy-image-from-clipboard()
+;;; insert heading with date
+(defun get-format-date ()
+  (format-time-string "%Y-%m-%d"))
+(defun insert-heading-with-date()
   (interactive)
-  (setq filename
-        (concat
-         (make-temp-name
-          (concat default-image-directory
-		  ;;(buffer-file-name)
-		  "/image_"
-                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
-  ;;   (shell-command "snippingtool /clip")
-  (shell-command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save('" filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
-  (insert (concat "[[file:" filename "]]"))
-  (org-display-inline-images))
+  (org-insert-heading)
+  (insert (concat (get-format-date) "\n")))
 
-;; (use-package org-download
-;;   :custom
-;;   (org-download-method 'directory)
-;;   (org-download-image-dir "~/org/images")
-;;   (org-download-screenshot-method "~/scoop/apps/irfanview/current/i_view64.exe /capture=4 /convert=\"%s\""))
-
-
-;; tex
-(use-package tex
-  :ensure auctex
+;;; pyim
+(use-package pyim
   :config
-  (setq org-latex-compiler "xelatex")
-  (setq-default TeX-engine 'xetex))
-(require 'ox-latex)
-(add-to-list 'org-latex-packages-alist '("" "xeCJK" t ("xelatex")))
-(use-package cdlatex
-    :hook (LaTeX-mode . cdlatex-mode)
-    :hook (org-mode . org-cdlatex-mode)
-    :config (define-key cdlatex-mode-map  "(" nil))
+  (use-package pyim-basedict
+    :after pyim
+    :config
+    (pyim-basedict-enable))
+  (use-package posframe
+    :after pyim)
+  (setq default-input-method "pyim"
+	pyim-page-length 5
+	pyim-cloudim 'baidu
+	pyim-indicator-list '(pyim-indicator-with-cursor-color pyim-indicator-with-modeline)
+	pyim-page-tooltip '(posframe popup minibuffer))
+  (setq-default pyim-english-input-switch-functions
+                '(pyim-probe-dynamic-english
+                  pyim-probe-isearch-mode
+                  ;; pyim-probe-program-mode
+                  pyim-probe-org-structure-template))
+  
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+  (pyim-default-scheme 'microsoft-shuangpin)
+  :bind
+  ("C-\\" . toggle-input-method)
+  ("M-j" . pyim-convert-string-at-point))
 
-;; org to docx
-(defun org-export-docx ()
-  (interactive)
-  (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
-	(template-file "~/org/template.docx"))
-    ;; (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
-    (shell-command (format "pandoc %s -o %s" (buffer-file-name) docx-file))
-    (message "Convert finish: %s" docx-file)))
-
-;; magit
+;;; magit
 (use-package magit
-  :bind (("C-x g" . magit-status))) 
+  :defer t
+  :bind ("C-x g" . magit))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(initial-buffer-choice "~/org/journal.org")
- '(package-selected-packages
-   '(cdlatex auctex org-download undo-tree org-superstar amx use-package evil doom-themes doom-modeline counsel company)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(hl-line ((t (:extend t :background "blanched almond" :distant-foreground "black")))))
+;;; which key
+(use-package which-key
+  :config
+  (which-key-mode))
+
+;;; projectile
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  :config
+  (setq projectile-project-search-path '(("~/projects/" . 1)))
+  :bind (:map projectile-mode-map
+              ("C-c p" . projectile-command-map)))
+
+(use-package counsel-projectile
+  :after (projectile)
+  :init (counsel-projectile-mode))
+
+;;; lsp mode
+;; (use-package lsp-mode
+;;   :init
+;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+;;   (setq lsp-keymap-prefix "C-c l")
+;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+;; 	 (python-mode . lsp-deferred)
+;;          ;; if you want which-key integration
+;; 	 (lsp-mode . lsp-enable-which-key-integration))
+;;   :config
+;;   (flymake-mode 0)
+;;   :commands lsp-deferred)
+;; 
+;; (use-package lsp-ui
+;;   :after lsp-mode
+;;   :commands lsp-ui-mode
+;;   :config
+;;   (setq lsp-ui-doc--buffer-prefix "*lsp-ui-doc-"
+;;         lsp-ui-doc-winum-ignore t
+;;         ;; https://github.com/emacs-lsp/lsp-mode/blob/master/docs/tutorials/how-to-turn-off.md
+;;         lsp-enable-symbol-highlighting t
+;; 
+;;         lsp-ui-doc-enable t
+;;         lsp-ui-doc-position 'top
+;;         lsp-ui-doc-alignment 'frame
+;;         lsp-ui-doc-show-with-cursor t
+;;         lsp-ui-doc-text-scale-level -3
+;; 
+;;         lsp-lens-enable t
+;; 
+;;         lsp-headerline-breadcrumb-enable nil
+;; 
+;;         lsp-ui-sideline-enable nil
+;;         ;; lsp-ui-sideline-show-hover nil
+;;         ;; lsp-ui-sideline-show-code-actions t
+;;         ;; lsp-ui-sideline-show-diagnostics t
+;;         lsp-ui-sideline-show-code-actions nil
+;; 
+;;         lsp-modeline-code-actions-enable t
+;; 
+;;         lsp-signature-render-documentation nil
+;; 	scroll-margin 0)
+;;   :bind (:map evil-normal-state-map
+;;               ("gd" . lsp-ui-peek-find-definitions)
+;;               ("gr" . lsp-ui-peek-find-references)
+;;               :map md/leader-map
+;;               ("Ni" . lsp-ui-imenu)))
+
+;;; python env
+(use-package conda
+  :defer t
+  :config
+  ;; if you want interactive shell support, include:
+  (conda-env-initialize-interactive-shells)
+  ;; if you want eshell support, include:
+  (conda-env-initialize-eshell)
+  ;; if you want auto-activation (see below for details), include:
+  (conda-env-autoactivate-mode t)
+  ;; if you want to automatically activate a conda environment on the opening of a file:
+  :hook
+  (find-file . (lambda () (when (bound-and-true-p conda-project-env-path)
+                                       (conda-env-activate-for-buffer)))))
