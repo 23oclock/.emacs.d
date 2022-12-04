@@ -11,5 +11,8 @@
 ;; 备份文件集中到一个目录
 (setq backup-dir (concat user-emacs-directory "backup"))
 (setq backup-directory-alist `(("." . ,backup-dir)))  ;; 此处反引号和逗号配合使用，表示求出变量的值
+;; 中英文混排时自动换行更自然
+(setq word-wrap-by-category t) 
+(global-visual-line-mode 1)
 
 (provide 'init-emacs)

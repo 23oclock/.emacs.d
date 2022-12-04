@@ -7,4 +7,5 @@
 (global-display-line-numbers-mode 1)
 
 (setq ring-bell-function 'ignore)
+;; (setq inhibit-startup-screen t)
 (setq initial-buffer-choice "~/org/")
