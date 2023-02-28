@@ -2,6 +2,7 @@
 
 ;;; which key
 (use-package which-key
+  :defer 3
   :config
   (which-key-mode))
 
@@ -13,11 +14,13 @@
 
 ;; vertically show minibuffer
 (use-package vertico
+  :defer 1
   :config
   (vertico-mode t))
  
 ;; search orderless in minibuffer
 (use-package orderless
+  :defer 3
   :init
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
@@ -25,6 +28,7 @@
 
 ;; show some describtional information in minibuffer
 (use-package marginalia
+  :defer 3
   :config
   (marginalia-mode))
 

@@ -25,4 +25,4 @@
 (global-linum-mode 1)
 (setq ring-bell-function 'ignore)
 
-;; (setq initial-buffer-choice "~/org/journal.org")
+(setq initial-buffer-choice "~/org")

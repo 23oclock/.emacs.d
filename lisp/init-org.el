@@ -6,7 +6,8 @@
   :demand t
   :init
   (setq org-directory "~/org/"
-	org-startup-folded 'content ;; 只显示标题
+	org-startup-indented t ;; 缩进
+	org-startup-folded t ;; 只显示标题
 	org-cycle-include-plain-lists 'integrate) ;; 将列表视为heading
   :config
   (setq org-capture-templates
