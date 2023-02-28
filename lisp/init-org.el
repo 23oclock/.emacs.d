@@ -19,13 +19,16 @@
   ("C-c c" . org-capture))
 
 
-(use-package org-superstar
-  :after org
-  :hook (org-mode . org-superstar-mode)
-  :config
-  (setq org-superstar-special-todo-items t)
-  (setq org-superstar-headline-bullets-list
-      '("◉" ("🞛" ?◈) "○" "▷")))
+;; (use-package org-superstar
+;;   :after org
+;;   :hook (org-mode . org-superstar-mode)
+;;   :config
+;;   (setq org-superstar-special-todo-items t)
+;;   (setq org-superstar-headline-bullets-list
+;;       '("◉" ("🞛" ?◈) "○" "▷")))
+
+(use-package org-modern
+  :hook (org-mode . org-modern-mode))
 
 ;;; insert heading with timstamp
 (defun org-insert-timestamp-heading()

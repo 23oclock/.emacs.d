@@ -3,7 +3,7 @@
 ;;; 自定义字体：等距更纱黑体中文字宽刚好是英文字母的两倍
 ;;; xxxxxxxx
 ;;; 你你你你
-(set-frame-font "等距更纱黑体 SC 16")
+(set-frame-font "等距更纱黑体 SC 14")
 
 ;;; 设置melpa镜像
 (setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
