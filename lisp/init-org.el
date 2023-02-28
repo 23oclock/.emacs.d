@@ -1,13 +1,13 @@
+;;; -*- lexical-binding: t -*-
+
 ;;; org mode
-(require 'org-tempo)
+(require 'org-tempo)  ;; 使用 <s 快速插入代码块
 (use-package org
   :demand t
   :init
   (setq org-directory "~/org/"
-      org-startup-indented t
-      org-adapt-indentatio t
-      org-startup-folde 'content ;; 只显示标题
-      org-cycle-include-plain-lists 'integrate) ;; 将列表视为heading
+	org-startup-folded 'content ;; 只显示标题
+	org-cycle-include-plain-lists 'integrate) ;; 将列表视为heading
   :config
   (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
@@ -32,8 +32,8 @@
   (org-insert-heading)
   (insert (concat (format-time-string "%H:%M") "\n")))
 
-;;; ox-pandoc
-(use-package ox-pandoc
-  :after org)
+;; ;;; ox-pandoc
+;; (use-package ox-pandoc
+;;   :after org)
 
 (provide 'init-org)

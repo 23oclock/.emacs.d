@@ -1,3 +1,13 @@
+;;; -*- lexical-binding: t -*-
+
+;;; evil
+(use-package evil
+  :defer 0.5
+  :config
+  (evil-mode)
+  (evil-set-undo-system 'undo-redo)
+  (define-key evil-normal-state-map (kbd "<tab>") 'org-cycle))
+
 ;;; pyim
 (use-package pyim
   :config
@@ -26,4 +36,4 @@
   ("C-\\" . toggle-input-method)
   ("M-j" . pyim-convert-string-at-point))
 
-(provide 'init-pyim)
+(provide 'init-edit)
