@@ -1,9 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 
 ;;; org mode
-(require 'org-tempo)  ;; 使用 <s 快速插入代码块
+;; (require 'org-tempo)  ;; 使用 <s 快速插入代码块
 (use-package org
-  :demand t
   :init
   (setq org-directory "~/org/"
 	org-startup-indented t ;; 缩进

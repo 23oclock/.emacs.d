@@ -1,5 +1,12 @@
 ;;; -*- lexical-binding: t -*-
 
+;;; 启动时调大垃圾回收阈值
+(let ((normal-gc-cons-threshold (* 1024 1024 1024))
+      (init-gc-cons-threshold most-positive-fixnum))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+
 ;;; 自定义字体：等距更纱黑体中文字宽刚好是英文字母的两倍
 ;;; xxxxxxxx
 ;;; 你你你你
@@ -29,3 +36,5 @@
 (require 'init-ui)
 (require 'init-org)
 (require 'init-tex)
+
+(use-package esup)

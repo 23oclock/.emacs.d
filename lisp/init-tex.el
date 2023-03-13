@@ -22,9 +22,9 @@
 ;;   :custom
 ;;   (org-fragtog-preview-delay 1.0))
 
-(use-package xenops
-   :hook
-   (org-mode . org-fragtog-mode))
+;; (use-package xenops
+;;    :hook
+;;    (org-mode . org-fragtog-mode))
   
 
 
