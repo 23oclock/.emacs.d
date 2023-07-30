@@ -8,7 +8,7 @@
 
 (setq frame-inhibit-implied-resize t)
 
-;; Disable GUI elements
+;; disable gui elements
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)

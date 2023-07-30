@@ -1,40 +1,26 @@
-;;; -*- lexical-binding: t -*-
-
-;;; 启动时调大垃圾回收阈值
+;; -*- lexical-binding: t -*-
 (let ((normal-gc-cons-threshold (* 1024 1024 1024))
       (init-gc-cons-threshold most-positive-fixnum))
   (setq gc-cons-threshold init-gc-cons-threshold)
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
-;;; 自定义字体：等距更纱黑体中文字宽刚好是英文字母的两倍
-;;; xxxxxxxx
-;;; 你你你你
-(set-frame-font "等距更纱黑体 SC 14")
-
-;;; 设置melpa镜像
-(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-			 ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-			 ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-			 ("org" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+(setq package-archives '(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+                         ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize)
 
-;;; use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-(setq use-package-always-ensure t)  ;; 总是安装 use-package 中的包
-;; (setq use-package-always-defer t)
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))  ;; 载入 .emacs.d/lisp/ 文件夹中的代码
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+(require 'init-self-defined-functions)
 (require 'init-emacs)
-(require 'init-edit)
-(require 'init-company)
-(require 'init-minibuffer)
 (require 'init-ui)
+(require 'init-edit)
+(require 'init-minibuffer)
 (require 'init-org)
-(require 'init-tex)
-
-(use-package esup)
