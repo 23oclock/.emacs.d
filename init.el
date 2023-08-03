@@ -24,3 +24,4 @@
 (require 'init-edit)
 (require 'init-minibuffer)
 (require 'init-org)
+(require 'init-tex)

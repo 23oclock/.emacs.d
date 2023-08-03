@@ -15,7 +15,8 @@
 (setq inhibit-splash-screen t)
 (setq use-file-dialog nil)
 (global-hl-line-mode 1)
-(global-linum-mode 1)
+(menu-bar--display-line-numbers-mode-relative)
+;; (global-display-line-numbers-mode 1)
 (setq ring-bell-function 'ignore)
 
 (setq initial-buffer-choice "~/org")

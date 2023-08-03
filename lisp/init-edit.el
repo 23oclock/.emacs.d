@@ -8,7 +8,12 @@
     (define-key evil-motion-state-map (kbd "SPC") nil)
     (define-key evil-motion-state-map (kbd "RET") nil)
     (define-key evil-motion-state-map (kbd "TAB") nil))
-  (define-key evil-normal-state-map (kbd "<tab>") 'org-cycle))
+  )
+
+(use-package evil-mc
+  :after evil
+  :config
+  (global-evil-mc-mode 1))
 
 (use-package posframe)
 
@@ -20,9 +25,9 @@
     (pyim-basedict-enable))
   (setq default-input-method "pyim"
 	pyim-page-length 5
-	pyim-cloudim 'baidu
+	;; pyim-cloudim 'baidu
 	pyim-indicator-list '(pyim-indicator-with-cursor-color pyim-indicator-with-modeline)
-	pyim-page-tooltip '(posframe popup minibuffer))
+	pyim-page-tooltip '(minibuffer posframe popup minibuffer))
   (pyim-default-scheme 'microsoft-shuangpin)
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-dynamic-english
